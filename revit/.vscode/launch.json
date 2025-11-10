@@ -11,13 +11,13 @@
         "program": "C:\\Program Files\\Autodesk\\Revit 2025\\Revit.exe",
         "targetArchitecture": "x86_64",
         "args": [
-          "/netcore"
+          "C:\\Program Files\\Autodesk\\Revit 2025\\Samples\\Snowdon Towers Sample Architectural.rvt"
         ]
       },
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
       "console": "internalConsole"
-    },
+    }
     // {
     //   "name": "Rhino 8 Windows - netfx",
     //   "type": "clr",

@@ -40,5 +40,6 @@ public class WebAecRhinoView : UserControl
         settings.AreDevToolsEnabled = true;
 
         webView.Source = new Uri("http://localhost:5173/");
+        var messageHandler = new HostToUIMessageHandler(webView);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.UI;
 using Nice3point.Revit.Toolkit.Decorators;
 using Nice3point.Revit.Toolkit.External;
+using Nice3point.Revit.Toolkit.External.Handlers;
 using WebAecRevit.Views;
 
 namespace WebAecRevit;
@@ -11,10 +12,13 @@ namespace WebAecRevit;
 [UsedImplicitly]
 public class Application : ExternalApplication
 {
+    private static ActionEventHandler? _actionEventHandler;
+    public static ActionEventHandler actionEventHandler => _actionEventHandler ?? throw new InvalidOperationException("ActionEventHandler not initialized.");
     public static Guid DockablePaneId = new("0FD2B40B-B3FA-4676-92A0-BC3F71E2059D");
 
     public override void OnStartup()
     {
+        _actionEventHandler = new ActionEventHandler();
         CreateRibbon();
         CreateDockablePane();
     }
@@ -31,20 +35,20 @@ public class Application : ExternalApplication
     private void CreateDockablePane()
     {
         if (!DockablePane.PaneIsRegistered(new DockablePaneId(DockablePaneId)))
-            {
-                // Register the dockable pane
-                DockablePaneProvider
-                    .Register(Context.UiControlledApplication, DockablePaneId, "WebAecRevit")
-                    .SetConfiguration((data) =>
+        {
+            // Register the dockable pane
+            DockablePaneProvider
+                .Register(Context.UiControlledApplication, DockablePaneId, "WebAecRevit")
+                .SetConfiguration((data) =>
+                {
+                    data.FrameworkElement = new WebAecRevitView();
+                    data.InitialState = new DockablePaneState
                     {
-                        data.FrameworkElement = new WebAecRevitView();
-                        data.InitialState = new DockablePaneState
-                        {
-                            DockPosition = DockPosition.Right,
-                            MinimumHeight = 900,
-                            MinimumWidth = 450,
-                        };
-                    });
-            }
+                        DockPosition = DockPosition.Right,
+                        MinimumHeight = 900,
+                        MinimumWidth = 450,
+                    };
+                });
+        }
     }
 }
