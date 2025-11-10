@@ -1,22 +1,44 @@
-﻿using System.Windows.Controls;
+﻿using System.IO;
+using System.Windows;
+using System.Windows.Controls;
+using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.Wpf;
+
 
 namespace WebAecRevit.Views;
 
 public sealed class WebAecRevitView : UserControl
 {
+    private readonly WebView2 webView;
     public WebAecRevitView()
     {
         var grid = new System.Windows.Controls.Grid();
-        var textBlock = new TextBlock
+        Content = grid;
+
+        webView = new WebView2()
         {
-            Text = "WebAecRevit",
-            VerticalAlignment = System.Windows.VerticalAlignment.Center,
-            HorizontalAlignment = System.Windows.HorizontalAlignment.Center
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch
         };
 
-        grid.Background = System.Windows.Media.Brushes.White;
+        grid.Children.Add(webView);
 
-        Content = grid;
-        grid.Children.Add(textBlock);
+        Dispatcher.InvokeAsync(InitializeWebViewAsync);
+    }
+
+    public async void InitializeWebViewAsync()
+    {
+        var userDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "WebAecNYC2025");
+
+        // Ensure the directory exists
+        Directory.CreateDirectory(userDataFolder);
+
+        var environment = await CoreWebView2Environment.CreateAsync(userDataFolder: userDataFolder);
+
+        await webView.EnsureCoreWebView2Async(environment);
+        var settings = webView.CoreWebView2.Settings;
+        settings.AreDevToolsEnabled = true;
+
+        webView.Source = new Uri("http://localhost:5173/");
     }
 }

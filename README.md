@@ -60,6 +60,7 @@ _Estimated time: 30 minutes_
   npm install
   npm run dev
   ```
+- [ ] Install WebView2
 - [ ] Run C# projects (Revit/Rhino)
 - [ ] Initialize WebView2 pointing to local development
 
