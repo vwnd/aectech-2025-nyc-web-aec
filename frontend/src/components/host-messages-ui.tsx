@@ -1,6 +1,7 @@
 import type { WebViewEventListener } from "@/webview";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PropertiesTable from "./properties-table";
+import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "./ui/empty";
 
 interface Selection {
   id: string;
@@ -10,34 +11,37 @@ interface Selection {
 export default function HostMessagesUIApp() {
   const [selection, setSelection] = useState<Selection[]>([]);
 
-  useEffect(() => {
-    if (!window.chrome?.webview) return;
-
-    const listener: WebViewEventListener = (event) => {
-      setSelection(event.data.data);
-      console.log("Received message from host:", event.data);
-    };
-
-    window.chrome.webview.addEventListener("message", listener);
-    return () => {
-      if (window.chrome.webview)
-        window.chrome.webview.removeEventListener("message", listener);
-    };
-  }, []);
-
   if (!window.chrome.webview) {
     return (
-      <div className="flex flex-col min-h-screen justify-center items-center">
-        Can't find WebView
-      </div>
+      <Empty>
+        <EmptyHeader>
+          <EmptyTitle>WebView not available</EmptyTitle>
+          <EmptyDescription>
+            This application must be run inside a WebView environment.
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
     );
   }
 
+  const listener: WebViewEventListener = (event) => {
+    const message = event.data;
+    setSelection(message.data);
+    console.log("Received message from host:", message.type, message.data);
+  };
+
+  window.chrome.webview.addEventListener("message", listener);
+
   if (selection.length === 0) {
     return (
-      <div className="flex flex-col min-h-screen justify-center items-center">
-        <div>Nothing selected.</div>
-      </div>
+      <Empty>
+        <EmptyHeader>
+          <EmptyTitle>Nothing selected</EmptyTitle>
+          <EmptyDescription>
+            Please select an item to view its properties.
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
     );
   }
 

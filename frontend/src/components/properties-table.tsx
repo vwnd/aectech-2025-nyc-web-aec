@@ -44,7 +44,7 @@ export default function PropertiesTable({
 
           <CollapsibleContent>
             <Table>
-              <TableCaption>ID: {id}</TableCaption>
+              <TableCaption>{id}</TableCaption>
               <TableHeader>
                 <TableRow>
                   <TableHead>Property</TableHead>
