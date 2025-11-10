@@ -1,8 +1,7 @@
-﻿namespace Common
+﻿namespace WebAecCommon;
+
+public class Location
 {
-    public class Location
-    {
-        public double lat { get; set; }
-        public double lon { get; set; }
-    }
+    public double lat { get; set; }
+    public double lon { get; set; }
 }
