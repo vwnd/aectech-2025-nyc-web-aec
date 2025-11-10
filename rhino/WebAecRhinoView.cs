@@ -9,37 +9,46 @@ namespace WebAecRhino;
 
 public class WebAecRhinoView : UserControl
 {
-    private readonly WebView2 webView;
+    // private readonly WebView2 webView;
     public WebAecRhinoView()
     {
         var grid = new System.Windows.Controls.Grid();
         Content = grid;
 
-        webView = new WebView2()
+        var textBlock = new TextBlock
         {
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch
+            Text = "Hello WPF World!",
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
         };
 
-        grid.Children.Add(webView);
+        grid.Children.Add(textBlock);
 
-        Dispatcher.InvokeAsync(InitializeWebViewAsync);
+        // webView = new WebView2()
+        // {
+        //     HorizontalAlignment = HorizontalAlignment.Stretch,
+        //     VerticalAlignment = VerticalAlignment.Stretch
+        // };
+
+        // grid.Children.Add(webView);
+
+        // Dispatcher.InvokeAsync(InitializeWebViewAsync);
     }
 
-    public async void InitializeWebViewAsync()
-    {
-        var userDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "WebAecNYC2025");
+    // public async void InitializeWebViewAsync()
+    // {
+    //     var userDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "WebAecNYC2025");
 
-        // Ensure the directory exists
-        Directory.CreateDirectory(userDataFolder);
+    //     // Ensure the directory exists
+    //     Directory.CreateDirectory(userDataFolder);
 
-        var environment = await CoreWebView2Environment.CreateAsync(userDataFolder: userDataFolder);
+    //     var environment = await CoreWebView2Environment.CreateAsync(userDataFolder: userDataFolder);
 
-        await webView.EnsureCoreWebView2Async(environment);
-        var settings = webView.CoreWebView2.Settings;
-        settings.AreDevToolsEnabled = true;
+    //     await webView.EnsureCoreWebView2Async(environment);
+    //     var settings = webView.CoreWebView2.Settings;
+    //     settings.AreDevToolsEnabled = true;
 
-        webView.Source = new Uri("http://localhost:5173/");
-        var messageHandler = new HostToUIMessageHandler(webView);
-    }
+    //     webView.Source = new Uri("http://localhost:5173/");
+    //     var messageHandler = new HostToUIMessageHandler(webView);
+    // }
 }

@@ -1,10 +1,10 @@
-import HostMessagesUIApp from "./components/host-messages-ui";
+import HelloWorldApp from "./components/hello-world";
 import { ThemeProvider } from "./components/theme-provider";
 
 function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <HostMessagesUIApp />
+      <HelloWorldApp />
     </ThemeProvider>
   );
 }
