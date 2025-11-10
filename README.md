@@ -60,6 +60,7 @@ _Estimated time: 30 minutes_
   npm install
   npm run dev
   ```
+- [ ] Install WebView2
 - [ ] Run C# projects (Revit/Rhino)
 - [ ] Initialize WebView2 pointing to local development
 
@@ -74,6 +75,96 @@ _Estimated time: 25 min_
 - [ ] Select objects
 - [ ] Extract properties
 - [ ] Send data to WebView2
+
+This is how we get selected objects from Revit.
+
+```csharp
+public class HostToUIMessageHandler
+{
+    public HostToUIMessageHandler(WebView2 webView)
+    {
+        Context.UiApplication.SelectionChanged += (s, e) =>
+        {
+            var selectedElements = e.GetSelectedElements().ToElements(e.GetDocument());
+
+            var commonElements = new List<CommonElement>();
+
+            foreach (var element in selectedElements)
+            {
+                var properties = new Dictionary<string, string>();
+
+                foreach (var item in element.GetOrderedParameters())
+                {
+                    properties[item.Definition.Name] = item.AsString();
+                }
+                ;
+                var commonElement = new CommonElement(element.Id.ToString(), element.Name, properties);
+                commonElements.Add(commonElement);
+            }
+
+            var message = new BridgeMessage()
+            {
+                Type = "selection:changed",
+                Data = commonElements
+            };
+
+            webView.CoreWebView2.PostWebMessageAsJson(JsonConvert.SerializeObject(message));
+        };
+    }
+}
+```
+
+This is how we get selected objects from Rhino.
+
+````csharp
+public class HostToUIMessageHandler
+{
+    public HostToUIMessageHandler(WebView2 webView)
+    {
+        Rhino.RhinoDoc.SelectObjects += (s, e) =>
+        {
+            var selectedElements = e.RhinoObjects;
+
+            var commonElements = new List<CommonElement>();
+
+            foreach (var element in selectedElements)
+            {
+                var properties = new Dictionary<string, string>();
+
+                for (int i = 0; i < element.Attributes.GetUserStrings().Count; i++)
+                {
+                    var key = element.Attributes.GetUserStrings().GetKey(i);
+                    if (key == null) continue;
+                    var value = element.Attributes.GetUserString(key) ?? string.Empty;
+                    properties[key] = value;
+                }
+
+                var commonElement = new CommonElement(element.Id.ToString(), element.Name, properties);
+                commonElements.Add(commonElement);
+            }
+
+            var message = new BridgeMessage()
+            {
+                Type = "selection:changed",
+                Data = commonElements
+            };
+
+            webView.CoreWebView2.PostWebMessageAsJson(JsonConvert.SerializeObject(message));
+        };
+    }
+}
+```
+
+```csharp
+public class BridgeMessage
+{
+    [JsonProperty("type")]
+    public string Type { get; set; }
+
+    [JsonProperty("data")]
+    public object Data { get; set; }
+}
+````
 
 ### UI
 

@@ -8,7 +8,6 @@
       "args": [
         "build",
         "-clp:NoSummary",
-        "-c:Revit R25",
         "${workspaceFolder}/WebAecRevit.csproj"
       ],
       "problemMatcher": "$msCompile",

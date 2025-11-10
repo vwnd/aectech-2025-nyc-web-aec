@@ -1,15 +1,15 @@
+import reactLogo from "@/assets/react.svg";
+import revitLogo from "@/assets/revit.svg";
+import rhinoLogo from "@/assets/rhino.png";
 import ThemeToggle from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import revitLogo from "./assets/revit.svg";
-import rhinoLogo from "./assets/rhino.png";
 import viteLogo from "/vite.svg";
 
 export default function HelloWorldApp() {
   const [count, setCount] = useState(0);
 
-  const host: string = "Rhino";
+  const host: string = "React";
   let logo: string = reactLogo;
   switch (host) {
     case "Rhino":
